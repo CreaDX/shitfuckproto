@@ -1,0 +1,47 @@
+import React, { useRef, useState} from 'react'
+import './App.css';
+import { Canvas, useFrame } from '@react-three/fiber'
+import { useLoader } from '@react-three/fiber'
+import { TextureLoader } from 'three/src/loaders/TextureLoader'
+import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader'
+
+
+
+function Tank() {
+  const tanktex = useLoader(TextureLoader, 'tanktex.jpeg')
+  const obj = useLoader(OBJLoader, '/tank.obj')
+  return <primitive object={obj} scale={0.1} rotation={[90, 0, 0]}
+ map={tanktex}/>
+}
+
+
+function Box(props) {
+  const colorMap = useLoader(TextureLoader, 'texturemf.jpg')
+
+  // This reference will give us direct access to the mesh
+  const meshRef = useRef()
+  // Set up state for the hovered and active state
+  const [hovered, setHover] = useState(false)
+  const [active, setActive] = useState(false)
+  // Subscribe this component to the render-loop, rotate the mesh every frame
+ 
+  // Return view, these are regular three.js elements expressed in JSX
+  return (<>
+  <Tank/>
+
+  <mesh
+      {...props}
+      ref={meshRef}
+      scale={3}
+      onPointerOver={(event) => setHover(true)}
+      onPointerOut={(event) => setHover(false)}>
+      <planeGeometry args={[5, 5, 1]} />
+      <meshStandardMaterial map={colorMap} />
+    </mesh>
+  </>
+    
+  )
+}
+
+
+export default Box;
